@@ -16,4 +16,4 @@ conda:
     - rasterio
 
 post:
-  - ./load_thredds_data.sh
+  - ./load-thredds-data.sh
