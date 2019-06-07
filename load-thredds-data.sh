@@ -23,7 +23,7 @@ chmod -R 0755 $1/thredds/public
 cd $1/thredds/public/gldas/raw/
 
 
-cat $DIR/urls-test.txt | tr -d '\r' | xargs -n 1 curl -LJO -n -c ~/.urs_cookies -b ~/.urs_cookies
+cat $DIR/urls.txt | tr -d '\r' | xargs -n 1 curl -LJO -n -c ~/.urs_cookies -b ~/.urs_cookies
 
 echo "......Download Done"
 
