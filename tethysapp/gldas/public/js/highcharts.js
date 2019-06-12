@@ -188,9 +188,9 @@ function getDrawnChart(drawnItems) {
         let url;
         let drawtype = geojson[0]['geometry']['type'];
         if (drawtype === 'Point') {
-            url = '/apps/gldas/ajax/getPointSeries/';
+            url = mount_path + 'apps/gldas/ajax/getPointSeries/';
         } else {
-            url = '/apps/gldas/ajax/getPolygonAverage/';
+            url = mount_path + 'apps/gldas/ajax/getPolygonAverage/';
         }
 
         $.ajax({

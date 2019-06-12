@@ -4,6 +4,11 @@ from tethys_sdk.gizmos import SelectInput, RangeSlider
 from .options import gldas_variables, wms_colors, geojson_colors, timecoverage, get_charttypes
 from .app import Gldas as App
 
+import os
+
+MOUNT_PATH = os.environ.get('TETHYS_MOUNT_PATH') or '/'
+MOUNT_PATH = os.path.join(MOUNT_PATH, '')
+
 
 @login_required()
 def home(request):
@@ -90,6 +95,8 @@ def home(request):
         'githublink': App.githublink,
         'gldaslink': App.gldaslink,
         'version': App.version,
+        'mount_path': MOUNT_PATH
+
     }
 
     return render(request, 'gldas/home.html', context)

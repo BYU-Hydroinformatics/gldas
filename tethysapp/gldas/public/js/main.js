@@ -18,7 +18,7 @@ $.ajaxSetup({
 ////////////////////////////////////////////////////////////////////////  AJAX FUNCTIONS
 function getThreddswms() {
     $.ajax({
-        url: '/apps/gldas/ajax/getCustomSettings/',
+        url: mount_path + 'apps/gldas/ajax/getCustomSettings/',
         async: false,
         data: '',
         dataType: 'json',
