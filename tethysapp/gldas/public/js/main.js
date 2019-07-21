@@ -1,5 +1,6 @@
-// Getting the csrf token
+// see base.html scripts for thredds, geoserver, app, model, instance_id
 let csrftoken = Cookies.get('csrftoken');
+Cookies.set('instance_id', instance_id);
 
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
@@ -14,27 +15,7 @@ $.ajaxSetup({
     }
 });
 
-
-////////////////////////////////////////////////////////////////////////  AJAX FUNCTIONS
-function getThreddswms() {
-    $.ajax({
-        url: '/apps/gldas/ajax/getCustomSettings/',
-        async: false,
-        data: '',
-        dataType: 'json',
-        contentType: "application/json",
-        method: 'POST',
-        success: function (result) {
-            threddsbase = result['threddsurl'];
-            geoserverbase = result['geoserverurl']
-        },
-    });
-}
-
 ////////////////////////////////////////////////////////////////////////  LOAD THE MAP
-let threddsbase;
-let geoserverbase;
-getThreddswms();                        // sets the value of threddsbase and geoserverbase
 const mapObj = map();                   // used by legend and draw controls
 const basemapObj = basemaps();          // used in the make controls function
 
@@ -63,79 +44,54 @@ mapObj.on(L.Draw.Event.CREATED, function (event) {
     getDrawnChart(drawnItems);
 });
 
-mapObj.on("mousemove", function (event) {
-    $("#mouse-position").html('Lat: ' + event.latlng.lat.toFixed(5) + ', Lon: ' + event.latlng.lng.toFixed(5));
-});
+mapObj.on("mousemove", function (event) {$("#mouse-position").html('Lat: ' + event.latlng.lat.toFixed(5) + ', Lon: ' + event.latlng.lng.toFixed(5));});
 
 let layerObj = newLayer();              // adds the wms raster layer
 let controlsObj = makeControls();       // the layer toggle controls top-right corner
 legend.addTo(mapObj);                   // add the legend graphic to the map
-updateGEOJSON();                        // asynchronously get geoserver wfs/geojson data for the regions
-styleGeoJSON();
+latlon.addTo(mapObj);                   // add the box showing lat and lon to the map
+addGEOJSON();                           // add the geojson world boundary regions
 
 ////////////////////////////////////////////////////////////////////////  EVENT LISTENERS
-$("#dates").change(function () {
-    clearMap();
-    for (let i = 0; i < geojsons.length; i++) {
-        geojsons[i][0].addTo(mapObj)
+function update() {
+    for (let i in geojsons) {
+        geojsons[i].addTo(mapObj)
     }
-    layerObj = newLayer();
-    controlsObj = makeControls();
-    getDrawnChart(drawnItems);
-    legend.addTo(mapObj);
-});
-
-$("#variables").change(function () {
-    clearMap();
-    for (let i = 0; i < geojsons.length; i++) {
-        geojsons[i][0].addTo(mapObj)
-    }
-    layerObj = newLayer();
-    controlsObj = makeControls();
-    getDrawnChart(drawnItems);
-    legend.addTo(mapObj);
-});
-
-
-$('#colorscheme').change(function () {
-    clearMap();
-    for (let i = 0; i < geojsons.length; i++) {
-        geojsons[i][0].addTo(mapObj)
-    }
+    usershape.addTo(mapObj);
     layerObj = newLayer();
     controlsObj = makeControls();
     legend.addTo(mapObj);
-});
+}
+function changeInputs() {
+    let charts = $("#charttype");
+    charts.empty();
+    charts.append('<option value="timeseries">Full Timeseries (Single-Line Plot)</option>');
+    if ($("#dates").val() === 'alltimes') {
+        charts.append('<option value="monthbox">Monthly Analysis (Box Plot)</option>' +
+            '<option value="monthmulti">Monthly Analysis (Multi-Line Plot)</option>' +
+            '<option value="yearbox">Yearly Analysis (Box Plot)</option>' +
+            '<option value="yearmulti">Yearly Analysis (Multi-Line Plot)</option>');
+    }
+    charts.val('timeseries');
+}
+$(".customs").keyup(function () {this.value = this.value.replace(/i[a-z]/, '')});
 
-$("#opacity").change(function () {
-    layerObj.setOpacity($('#opacity_raster').val());
-});
+// data controls
+$("#variables").change(function () {clearMap();update();getDrawnChart(drawnItems);});
+$("#dates").change(function () {changeInputs();clearMap();update();getDrawnChart(drawnItems);});
+$('#charttype').change(function () {makechart();});
+$("#levels").change(function () {clearMap();update();});
 
-
-$('#gjColor').change(function () {
-    styleGeoJSON();
-});
-$("#gjOpacity").change(function () {
-    styleGeoJSON();
-});
-$("#gjWeight").change(function () {
-    styleGeoJSON();
-});
-$('#gjFillColor').change(function () {
-    styleGeoJSON();
-});
-
-$("#gjFillOpacity").change(function () {
-    styleGeoJSON();
-});
-
-
-$('#charttype').change(function () {
-    makechart();
-});
-$("#datatoggle").click(function() {
-    $("#datacontrols").toggle();
-});
-$("#displaytoggle").click(function() {
-    $("#displaycontrols").toggle();
-});
+// display controls
+$("#display").click(function() {$("#displayopts").toggle();});
+$("#cs_min").change(function () {if ($("#use_csrange").is(":checked")) {clearMap();update()}});
+$("#cs_max").change(function () {if ($("#use_csrange").is(":checked")) {clearMap();update()}});
+$("#use_csrange").change(function () {clearMap();update()});
+// $("#use_times").change(function () {customdates()});
+$('#colorscheme').change(function () {clearMap();update();});
+$("#opacity").change(function () {layerObj.setOpacity($(this).val())});
+$('#gjClr').change(function () {styleGeoJSON();});
+$("#gjOp").change(function () {styleGeoJSON();});
+$("#gjWt").change(function () {styleGeoJSON();});
+$('#gjFlClr').change(function () {styleGeoJSON();});
+$("#gjFlOp").change(function () {styleGeoJSON();});
