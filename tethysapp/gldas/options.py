@@ -1,23 +1,7 @@
-from .app import Gldas as App
-import os
-
-
-def app_settings():
-    """
-    Gets the settings for the app for use in other functions and ajax for leaflet
-    Dependencies: os, App (app)
-    """
-    return {
-        'app_wksp_path': os.path.join(App.get_app_workspace().path, ''),
-        'threddsdatadir': App.get_custom_setting("Local Thredds Folder Path"),
-        'threddsurl': App.get_custom_setting("Thredds WMS URL"),
-    }
+# -*- coding: utf-8 -*-
 
 
 def gldas_variables():
-    """
-    List of the plottable variables from the GLDAS 2.1 datasets used
-    """
     return [('Air Temperature', 'Tair_f_inst'),
             ('Canopy Water Amount', 'CanopInt_inst'),
             ('Downward Heat Flux In Soil', 'Qg_tavg'),
@@ -49,39 +33,20 @@ def gldas_variables():
             ('Wind Speed', 'Wind_f_inst')]
 
 
-def timecoverage():
-    """
-    Time intervals of GLDAS data
-    """
+def timeintervals():
     return [
         ('All Available Times', 'alltimes'),
-        (2019, 2019),
-        (2018, 2018),
-        (2017, 2017),
-        (2016, 2016),
-        (2015, 2015),
-        (2014, 2014),
-        (2013, 2013),
-        (2012, 2012),
-        (2011, 2011),
-        (2010, 2010),
-        (2009, 2009),
-        (2008, 2008),
-        (2007, 2007),
-        (2006, 2006),
-        (2005, 2005),
-        (2004, 2004),
-        (2003, 2003),
-        (2002, 2002),
-        (2001, 2001),
-        (2000, 2000),
+        ('2010s', '2010s'),
+        ('2000s', '2000s'),
+        ('1990s', '1990s'),
+        ('1980s', '1980s'),
+        ('1970s', '1970s'),
+        ('1960s', '1960s'),
+        ('1950s', '1950s'),
     ]
 
 
 def wms_colors():
-    """
-    Color options usable by thredds wms
-    """
     return [
         ('SST-36', 'sst_36'),
         ('Greyscale', 'greyscale'),
@@ -122,11 +87,70 @@ def get_charttypes():
 
 
 def worldregions():
-    """
-    Populates the drop down menu with the list of available shapefiles to use for averaging
-    Dependencies: os, App (app)
-    """
-    folders = os.listdir(os.path.join(App.get_app_workspace().path, 'shapefiles'))
-    options = [(folder, folder) for folder in folders if not folder.startswith('.')]
-    options.sort()
-    return options
+    return (
+        ('All World Regions', ''),
+        ('Antarctica', 'Antarctica'),
+        ('Asiatic Russia', 'Asiatic Russia'),
+        ('Australia/New Zealand', 'Australia/New Zealand'),
+        ('Caribbean', 'Caribbean'),
+        ('Central America', 'Central America'),
+        ('Central Asia', 'Central Asia'),
+        ('Eastern Africa', 'Eastern Africa'),
+        ('Eastern Asia', 'Eastern Asia'),
+        ('Eastern Europe', 'Eastern Europe'),
+        ('European Russia', 'European Russia'),
+        ('Melanesia', 'Melanesia'),
+        ('Micronesia', 'Micronesia'),
+        ('Middle Africa', 'Middle Africa'),
+        ('Northern Africa', 'Northern Africa'),
+        ('Northern America', 'Northern America'),
+        ('Northern Europe', 'Northern Europe'),
+        ('Polynesia', 'Polynesia'),
+        ('South America', 'South America'),
+        ('Southeastern Asia', 'Southeastern Asia'),
+        ('Southern Africa', 'Southern Africa'),
+        ('Southern Asia', 'Southern Asia'),
+        ('Southern Europe', 'Southern Europe'),
+        ('Western Africa', 'Western Africa'),
+        ('Western Asia', 'Western Asia'),
+        ('Western Europe', 'Western Europe'),
+        ('None', 'none')
+    )
+
+
+def countries():
+    return ['Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antarctica',
+            'Antigua and Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas',
+            'Bahrain', 'Baker Island', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda',
+            'Bhutan', 'Bolivia', 'Bonaire', 'Bosnia and Herzegovina', 'Botswana', 'Bouvet Island', 'Brazil',
+            'British Indian Ocean Territory', 'British Virgin Islands', 'Brunei Darussalam', 'Bulgaria', 'Burkina Faso',
+            'Burundi', 'Cambodia', 'Cameroon', 'Canada', 'Cape Verde', 'Cayman Islands', 'Central African Republic',
+            'Chad', 'Chile', 'China', 'Christmas Island', 'Cocos Islands', 'Colombia', 'Comoros', 'Congo', 'Congo DRC',
+            'Cook Islands', 'Costa Rica', "Côte d'Ivoire", 'Croatia', 'Cuba', 'Curacao', 'Cyprus', 'Czech Republic',
+            'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt', 'El Salvador',
+            'Equatorial Guinea', 'Eritrea', 'Estonia', 'Ethiopia', 'Falkland Islands', 'Faroe Islands', 'Fiji',
+            'Finland', 'France', 'French Guiana', 'French Polynesia', 'French Southern Territories', 'Gabon', 'Gambia',
+            'Georgia', 'Germany', 'Ghana', 'Gibraltar', 'Glorioso Island', 'Greece', 'Greenland', 'Grenada',
+            'Guadeloupe', 'Guam', 'Guatemala', 'Guernsey', 'Guinea', 'Guinea-Bissau', 'Guyana', 'Haiti',
+            'Heard Island and McDonald Islands', 'Honduras', 'Howland Island', 'Hungary', 'Iceland', 'India',
+            'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Isle of Man', 'Israel', 'Italy', 'Jamaica', 'Jan Mayen', 'Japan',
+            'Jarvis Island', 'Jersey', 'Johnston Atoll', 'Jordan', 'Juan De Nova Island', 'Kazakhstan', 'Kenya',
+            'Kiribati', 'Kuwait', 'Kyrgyzstan', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya',
+            'Liechtenstein', 'Lithuania', 'Luxembourg', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta',
+            'Marshall Islands', 'Martinique', 'Mauritania', 'Mauritius', 'Mayotte', 'Mexico', 'Micronesia',
+            'Midway Islands', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Montserrat', 'Morocco', 'Mozambique',
+            'Myanmar', 'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger',
+            'Nigeria', 'Niue', 'Norfolk Island', 'North Korea', 'Northern Mariana Islands', 'Norway', 'Oman',
+            'Pakistan', 'Palau', 'Palestinian Territory', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru',
+            'Philippines', 'Pitcairn', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'Réunion', 'Romania',
+            'Russian Federation', 'Rwanda', 'Saba', 'Saint Barthelemy', 'Saint Eustatius', 'Saint Helena',
+            'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Martin', 'Saint Pierre and Miquelon',
+            'Saint Vincent and the Grenadines', 'Samoa', 'San Marino', 'Sao Tome and Principe', 'Saudi Arabia',
+            'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Sint Maarten', 'Slovakia', 'Slovenia',
+            'Solomon Islands', 'Somalia', 'South Africa', 'South Georgia', 'South Korea', 'South Sudan', 'Spain',
+            'Sri Lanka', 'Sudan', 'Suriname', 'Svalbard', 'Swaziland', 'Sweden', 'Switzerland', 'Syria', 'Tajikistan',
+            'Tanzania', 'Thailand', 'The Former Yugoslav Republic of Macedonia', 'Timor-Leste', 'Togo', 'Tokelau',
+            'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks and Caicos Islands', 'Tuvalu',
+            'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay',
+            'US Virgin Islands', 'Uzbekistan', 'Vanuatu', 'Vatican City', 'Venezuela', 'Vietnam', 'Wake Island',
+            'Wallis and Futuna', 'Yemen', 'Zambia', 'Zimbabwe']

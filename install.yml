@@ -13,3 +13,8 @@ conda:
     - pandas
     - rasterstats
     - rasterio
+    - requests
+    - pyshp
+    - json
+    - sphinx
+    - shpinx_rtd_theme

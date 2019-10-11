@@ -1,17 +1,12 @@
-import random
-import string
-
 from django.shortcuts import render
 from tethys_sdk.gizmos import SelectInput, RangeSlider
 
 from .app import Gldas as App
-from .options import gldas_variables, wms_colors, geojson_colors, timecoverage, get_charttypes, app_settings
+from .options import gldas_variables, wms_colors, geojson_colors, timeintervals, get_charttypes, worldregions
+from .utilities import new_id
 
 
 def home(request):
-    """
-    Controller for the app home page.
-    """
     variables = SelectInput(
         display_text='Select GLDAS Variable',
         name='variables',
@@ -24,8 +19,8 @@ def home(request):
         name='dates',
         multiple=False,
         original=True,
-        options=timecoverage(),
-        initial='alltimes'
+        options=timeintervals(),
+        initial='2010s'
     )
     charttype = SelectInput(
         display_text='Choose a Plot Type',
@@ -35,8 +30,16 @@ def home(request):
         options=get_charttypes(),
     )
 
+    regions = SelectInput(
+        display_text='Pick A World Region (ESRI Living Atlas)',
+        name='regions',
+        multiple=False,
+        original=True,
+        options=list(worldregions())
+    )
+
     colorscheme = SelectInput(
-        display_text='EO Data Color Scheme',
+        display_text='GLDAS Color Scheme',
         name='colorscheme',
         multiple=False,
         original=True,
@@ -45,7 +48,7 @@ def home(request):
     )
 
     opacity = RangeSlider(
-        display_text='EO Data Layer Opacity',
+        display_text='GLDAS Layer Opacity',
         name='opacity',
         min=.5,
         max=1,
@@ -100,10 +103,10 @@ def home(request):
 
     context = {
         # data options
-        'model': 'gldas',
         'variables': variables,
         'dates': dates,
         'charttype': charttype,
+        'regions': regions,
 
         # display options
         'colorscheme': colorscheme,
@@ -119,8 +122,8 @@ def home(request):
         'githublink': App.githublink,
         'datawebsite': App.datawebsite,
         'version': App.version,
-        'settings': app_settings(),
-        'instance_id': ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for i in range(10))
+        'thredds_url': App.get_custom_setting('thredds_url'),
+        'instance_id': new_id(),
     }
 
     return render(request, 'gldas/home.html', context)
