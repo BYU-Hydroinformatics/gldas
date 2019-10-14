@@ -1,3 +1,6 @@
+var staticPath = baseStatic
+var apiServer = `${staticPath.replace("/static", "/apps")}`
+
 // base.html scripts has additional vars from render context
 let csrftoken = Cookies.get('csrftoken');
 Cookies.set('instance_id', instance_id);
